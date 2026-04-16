@@ -1,0 +1,7 @@
+node_modules/
+.env
+bookings.json
+customers.json
+employees.json
+messages.json
+.DS_Store

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workforce Hub | Signature Developers</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #E5E4E2;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Mono', monospace;
+            --danger: #ff4444;
+            --success: #00ff88;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            background: linear-gradient(180deg, #050505 0%, #000 100%);
+            min-height: 100vh;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.03; pointer-events: none; z-index: 9999;
+        }
+
+        .container {
+            padding: 40px 5vw;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 5vh;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 2rem;
+        }
+
+        .header-left h1 {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .system-status {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .panel {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 2.5rem;
+            border-radius: 4px;
+        }
+
+        .panel-heading {
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0.4;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 20px; margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+        .tab-btn {
+            background: none; border: none; color: white;
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            opacity: 0.4; cursor: pointer; transition: 0.3s;
+        }
+        .tab-btn.active { opacity: 1; border-bottom: 1px solid white; padding-bottom: 5px; }
+
+        /* Projects */
+        .project-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .project-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        .project-info h3 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 300; }
+        .project-meta { font-size: 0.7rem; opacity: 0.4; margin-top: 0.5rem; line-height: 1.6; }
+        
+        .progress-bar {
+            width: 100px; height: 2px;
+            background: rgba(255,255,255,0.1); position: relative; margin-bottom: 0.5rem;
+        }
+        .progress-fill {
+            position: absolute; left: 0; top: 0; height: 100%; background: var(--accent-color);
+            transition: width 0.4s ease;
+        }
+        .project-update-controls {
+            display: flex; gap: 10px; align-items: center; margin-top: 1rem;
+            background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04);
+            padding: 1rem;
+        }
+        .update-input {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 0.6rem; font-family: var(--font-body); font-size: 0.7rem;
+            flex: 1; outline: none;
+        }
+        .update-input:focus { border-color: rgba(255,255,255,0.3); }
+        .btn-update {
+            background: transparent; border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 0.6rem 1rem; font-size: 0.6rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-update:hover { background: white; color: black; }
+
+        /* Comms */
+        .message-feed {
+            height: 400px; overflow-y: auto;
+            background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);
+            padding: 1.5rem; margin-bottom: 1.5rem;
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        .message-bubble {
+            max-width: 85%; padding: 0.8rem 1rem; border-radius: 4px;
+            font-size: 0.8rem; line-height: 1.5; position: relative;
+        }
+        .msg-from { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.4; margin-bottom: 0.3rem; }
+        .msg-global { border-left: 2px solid #E5E4E2; background: rgba(255,255,255,0.03); align-self: flex-start; }
+        .msg-received { border-left: 2px solid var(--danger); background: rgba(255,68,68,0.05); align-self: flex-start; }
+        .msg-sent { border-right: 2px solid var(--success); background: rgba(0,255,136,0.05); align-self: flex-end; text-align: right; }
+        
+        .comm-input {
+            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 1rem; font-family: var(--font-body); font-size: 0.75rem;
+            resize: none; outline: none; margin-bottom: 1rem; height: 80px;
+        }
+        .cmd-btn {
+            background: white; color: black; border: none; padding: 0.8rem 1.5rem;
+            font-size: 0.7rem; letter-spacing: 0.2rem; text-transform: uppercase;
+            cursor: pointer; width: 100%; transition: 0.3s; font-family: var(--font-body);
+            font-weight: bold;
+        }
+        .cmd-btn:hover { background: var(--accent-color); transform: translateY(-2px); }
+
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <div class="system-status"><div class="status-dot"></div> Node Authenticated</div>
+                <h1>Workforce Hub</h1>
+            </div>
+            <div style="text-align: right; opacity: 0.5; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;">
+                MEMBER ID: <span id="member-display">...</span><br>
+                <a href="/" style="color: white; text-decoration: none; margin-top: 0.5rem; display: inline-block;">Disconnect</a>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="main-column">
+                <div class="panel">
+                    <div class="panel-heading">Initiative Tracking</div>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab('pending')" id="tab-pending">Pending</button>
+                        <button class="tab-btn" onclick="switchTab('completed')" id="tab-completed">Completed</button>
+                    </div>
+
+                    <div id="project-list">
+                        <!-- Projects injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-column">
+                <div class="panel">
+                    <div class="panel-heading">Communication Array</div>
+                    <div style="font-size: 0.6rem; opacity:0.4; letter-spacing: 1px; margin-bottom: 1rem; text-transform: uppercase;">Direct Line: CEO</div>
+                    
+                    <div class="message-feed" id="message-feed">
+                        <!-- Messages -->
+                    </div>
+
+                    <textarea class="comm-input" id="comm-input" placeholder="Initiate response..."></textarea>
+                    <button class="cmd-btn" onclick="sendMessage()">Transmit to CEO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication check (Simulated UI security, real security relies on backend session/tokens in production)
+        const currentUser = sessionStorage.getItem('employeeUser');
+        if(!currentUser) {
+            window.location.href = '/';
+        }
+
+        document.getElementById('member-display').textContent = `@${currentUser}`;
+
+        let currentTab = 'pending';
+        let allBookings = [];
+
+        // Fetch Bookings
+        async function fetchBookings() {
+            try {
+                // Employees fetch admin bookings to view overall client tasks
+                const res = await fetch('/api/admin/bookings');
+                allBookings = await res.json();
+                renderBookings();
+            } catch (err) {
+                console.error('Failed to sync bookings.');
+            }
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('tab-pending').classList.toggle('active', tab === 'pending');
+            document.getElementById('tab-completed').classList.toggle('active', tab === 'completed');
+            renderBookings();
+        }
+
+        function renderBookings() {
+            const list = document.getElementById('project-list');
+            
+            // Filter: Completed = 100% progress. Pending = < 100%.
+            const filtered = allBookings.filter(b => currentTab === 'completed' ? b.progress >= 100 : b.progress < 100);
+
+            if (filtered.length === 0) {
+                if(currentTab === 'pending') {
+                    list.innerHTML = '<div style="opacity:0.4; font-size:0.7rem; padding:2rem; text-align:center;">NO PENDING INITIATIVES.</div>';
+                } else {
+                    list.innerHTML = '<div style="opacity:0.4; font-size:0.7rem; padding:2rem; text-align:center;">NO COMPLETED PROJECTS YET.</div>';
+                }
+                return;
+            }
+
+            // Sort by latest first
+            filtered.sort((a,b) => b.id - a.id);
+
+            list.innerHTML = filtered.map(b => {
+                const dateSplit = b.timestamp.split('T');
+                const timeStr = dateSplit[0] + ' ' + dateSplit[1].substring(0,8);
+                
+                return `
+                <div class="project-item">
+                    <div class="project-header">
+                        <div class="project-info">
+                            <h3>${b.service}</h3>
+                            <div class="project-meta">
+                                <strong>Client Name:</strong> ${b.name} <br>
+                                <strong>Company:</strong> ${b.company} <br>
+                                <strong>Contact:</strong> ${b.identifier || 'Unknown'} <br>
+                                <strong>Initiated:</strong> ${timeStr} <br><br>
+                                <strong style="color:var(--accent-color);">Client Vision:</strong><br>
+                                <span style="opacity:0.7; font-style:italic;">"${b.vision}"</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right; min-width: 120px;">
+                            <div style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; text-transform:uppercase; letter-spacing:1px;">ID #${b.id}</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: ${b.progress}%;"></div></div>
+                            <div style="font-size:0.6rem; color:var(--success); text-transform:uppercase; letter-spacing:1px; margin-top:5px;">${b.progress}% COMPLETE</div>
+                            <div style="font-size:0.6rem; color:var(--accent-color); text-transform:uppercase; letter-spacing:1px; margin-top:5px;">STATUS: ${b.status}</div>
+                        </div>
+                    </div>
+                    ${currentTab === 'pending' ? `
+                    <div class="project-update-controls">
+                        <input type="text" id="status-${b.id}" class="update-input" value="${b.status}" placeholder="Status Update (e.g. In Development)" style="flex:2;">
+                        <input type="number" id="progress-${b.id}" class="update-input" value="${b.progress}" min="0" max="100" placeholder="%" style="flex:1;">
+                        <button class="btn-update" onclick="updateBooking(${b.id})">UPDATE</button>
+                    </div>` : ''}
+                </div>
+                `;
+            }).join('');
+        }
+
+        async function updateBooking(id) {
+            const statusVal = document.getElementById(`status-${id}`).value;
+            const progressVal = parseInt(document.getElementById(`progress-${id}`).value) || 0;
+
+            try {
+                const res = await fetch(`/api/admin/bookings/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: statusVal, progress: progressVal })
+                });
+
+                if(res.ok) {
+                    // Re-fetch to update view immediately
+                    fetchBookings();
+                } else {
+                    alert("Failed to update booking.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Network failure on update.");
+            }
+        }
+
+        // --- Messaging ---
+        async function fetchMessages() {
+            if(!currentUser) return;
+            try {
+                const res = await fetch(`/api/messages?user=${currentUser}&role=employee`);
+                const messages = await res.json();
+                const feed = document.getElementById('message-feed');
+                
+                feed.innerHTML = messages.map(m => {
+                    let type, label;
+                    if(m.isPublic) {
+                        type = 'msg-global';
+                        label = 'CEO GLOBAL BROADCAST';
+                    } else if (m.from === currentUser) {
+                        type = 'msg-sent';
+                        label = 'SENT TO CEO';
+                    } else {
+                        type = 'msg-received';
+                        label = 'FROM CEO (DIRECT)';
+                    }
+                    
+                    return `
+                        <div class="message-bubble ${type}">
+                            <div class="msg-from">${label}</div>
+                            ${m.content}
+                        </div>
+                    `;
+                }).join('');
+                
+                // Keep scrolled to bottom unless currently inspecting
+                feed.scrollTop = feed.scrollHeight;
+            } catch(e) { console.error("Message sync fail"); }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('comm-input');
+            if(!input.value.trim()) return;
+
+            try {
+                const res = await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        from: currentUser,
+                        to: 'ajo', // CEO ID
+                        content: input.value,
+                        isPublic: false
+                    })
+                });
+                if(res.ok) {
+                    input.value = '';
+                    fetchMessages();
+                }
+            } catch(e) {
+                console.error("Transmission failed");
+            }
+        }
+
+        // Initial Load
+        fetchBookings();
+        fetchMessages();
+        setInterval(fetchBookings, 10000); // Polling for new bookings
+        setInterval(fetchMessages, 5000);  // Polling for new messages
+
+        gsap.from('.panel', { opacity: 0, y: 30, stagger: 0.2, duration: 1, ease: 'power3.out' });
+    </script>
+</body>
+</html>
