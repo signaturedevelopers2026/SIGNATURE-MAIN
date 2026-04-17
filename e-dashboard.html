@@ -194,7 +194,7 @@
             </div>
             <div style="text-align: right; opacity: 0.5; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;">
                 MEMBER ID: <span id="member-display">...</span><br>
-                <a href="/" style="color: white; text-decoration: none; margin-top: 0.5rem; display: inline-block;">Disconnect</a>
+                <a href="index.html" style="color: white; text-decoration: none; margin-top: 0.5rem; display: inline-block;">Disconnect</a>
             </div>
         </header>
 
@@ -234,7 +234,7 @@
         // Authentication check (Simulated UI security, real security relies on backend session/tokens in production)
         const currentUser = sessionStorage.getItem('employeeUser');
         if(!currentUser) {
-            window.location.href = '/';
+            window.location.href = 'index.html';
         }
 
         document.getElementById('member-display').textContent = `@${currentUser}`;

@@ -4,828 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signature Developers | Digital experiences that defy gravity.</title>
-
+    <title>Signature Developers | Digital Experiences that Defy Gravity</title>
+    <meta name="description" content="Signature Developers is a premium digital agency specializing in immersive web experiences, app development, and digital marketing.">
+    
     <!-- Google Fonts: Cormorant Garamond & DM Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 
-    <!-- GSAP -->
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Scripts (External Dependencies) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-    <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <style>
-        :root {
-            --bg-color: #000000;
-            --text-color: #FFFFFF;
-            --accent-color: #E5E4E2;
-            --font-display: 'Cormorant Garamond', serif;
-            --font-body: 'DM Mono', monospace;
-            --cursor-size: 12px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-            /* Custom cursor */
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-body);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Noise Overlay */
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0.04;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* Custom Cursor */
-        .custom-cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: var(--cursor-size);
-            height: var(--cursor-size);
-            border-radius: 50%;
-            background-color: var(--text-color);
-            mix-blend-mode: difference;
-            pointer-events: none;
-            z-index: 1000000;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease;
-        }
-
-        .custom-cursor.hover {
-            width: 48px;
-            height: 48px;
-            background-color: transparent;
-            border: 1px solid var(--text-color);
-        }
-
-        /* Typography */
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: var(--font-display);
-            font-weight: 400;
-            line-height: 1.1;
-        }
-
-        p {
-            font-size: 1rem;
-            line-height: 1.6;
-            font-weight: 300;
-        }
-
-        /* Floating Header */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 2.5rem 5vw;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .nav-logo {
-            font-size: 0.8rem;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            font-weight: 400;
-            pointer-events: auto;
-            text-decoration: none;
-            color: white;
-        }
-
-        .nav-portal-btn {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            padding: 0.8rem 1.8rem;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            border-radius: 50px;
-            pointer-events: auto;
-            transition: all 0.3s ease;
-        }
-
-        .nav-portal-btn:hover {
-            background: white;
-            color: black;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        /* Layout & Spacing */
-        section {
-            padding: 12vmax 5vw;
-            position: relative;
-        }
-
-        /* Diagonal Divider */
-        .divider {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-            opacity: 0.3;
-            transform: rotate(-2deg) scale(1.1);
-            margin: 5vmax 0;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            padding: 0 5vw;
-        }
-
-        #three-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .hero-company {
-            font-size: 0.8rem;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            opacity: 0.7;
-        }
-
-        .hero-title {
-            font-size: clamp(4rem, 10vw, 12rem);
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        .hero-tagline {
-            font-size: 1.2rem;
-            font-style: italic;
-            opacity: 0.8;
-            font-family: var(--font-display);
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            opacity: 0.6;
-        }
-
-        .scroll-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--text-color);
-            border-radius: 50%;
-            animation: bounce 2s infinite ease-in-out;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(10px);
-            }
-        }
-
-        /* Section Headings */
-        .scramble-title {
-            font-size: clamp(3rem, 7vw, 7rem);
-            margin-bottom: 6vmax;
-            text-transform: capitalize;
-            font-style: italic;
-        }
-
-        /* Services */
-        .services-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4vmax;
-        }
-
-        .service-item {
-            display: grid;
-            grid-template-columns: 80px 1fr;
-            align-items: center;
-            gap: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-
-        .service-item:nth-child(even) {
-            margin-left: 15vw;
-        }
-
-        .service-num {
-            font-size: 1.5rem;
-            opacity: 0.5;
-        }
-
-        .service-title {
-            font-size: clamp(2rem, 5vw, 4rem);
-            display: inline-block;
-            position: relative;
-        }
-
-        .service-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--text-color);
-            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .service-item:hover .service-title::after {
-            width: 100%;
-        }
-
-        /* About */
-        .about-split {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 5vw;
-        }
-
-        .about-text {
-            flex: 1;
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 4vw, 4rem);
-            line-height: 1.45;
-            max-width: 900px;
-        }
-
-        .about-graphic {
-            flex: 0 0 300px;
-            height: 300px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .circle-art {
-            width: 200px;
-            height: 200px;
-            border: 1px solid var(--accent-color);
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .circle-art::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 1px;
-            background: var(--accent-color);
-            top: 50%;
-            left: -20%;
-            transform: rotate(45deg);
-        }
-
-        .founder-callout {
-            margin-top: 4rem;
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            opacity: 0.6;
-        }
-
-        /* Founder Section */
-        .founder-split {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10vw;
-        }
-
-        .founder-graphic {
-            flex: 0 0 350px;
-            height: 400px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .founder-text {
-            flex: 1;
-        }
-
-        .square-art {
-            width: 150px;
-            height: 150px;
-            border: 1px solid var(--accent-color);
-            position: relative;
-            transform: rotate(45deg);
-            transition: border-radius 0.5s ease;
-        }
-
-        .square-art:hover {
-            border-radius: 50%;
-        }
-
-        /* Portfolio */
-        .portfolio-grid {
-            display: flex;
-            gap: 3vw;
-            overflow-x: auto;
-            padding-bottom: 2rem;
-            scrollbar-width: thin;
-        }
-
-        .portfolio-grid::-webkit-scrollbar {
-            height: 2px;
-        }
-
-        .portfolio-grid::-webkit-scrollbar-thumb {
-            background: #333;
-        }
-
-        .portfolio-item {
-            flex: 0 0 400px;
-            height: 500px;
-            background: #0a0a0a;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 2rem;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid transparent;
-        }
-
-        .portfolio-item:hover {
-            transform: scale(0.98);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .portfolio-item h3 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .portfolio-item span {
-            font-size: 0.8rem;
-            opacity: 0.6;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Testimonials */
-        .marquee-wrapper {
-            overflow: hidden;
-            white-space: nowrap;
-            display: flex;
-            position: relative;
-            padding: 2rem 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .marquee-content {
-            display: flex;
-            gap: 5vw;
-            padding-right: 5vw;
-            animation: scrollMarquee 30s linear infinite;
-        }
-
-        .testimonial {
-            display: inline-flex;
-            flex-direction: column;
-            gap: 1rem;
-            min-width: 400px;
-        }
-
-        .test-quote {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-style: italic;
-            white-space: normal;
-        }
-
-        .test-author {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0.5;
-        }
-
-        @keyframes scrollMarquee {
-            0% {
-                transform: translateX(0);
-            }
-
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-
-        /* Contact */
-        .contact-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10vw;
-        }
-
-        .contact-details {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .contact-details p {
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        input,
-        textarea {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            color: var(--text-color);
-            font-family: var(--font-body);
-            font-size: 1rem;
-            padding: 1rem 0;
-            border-radius: 0;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus,
-        textarea:focus {
-            border-bottom-color: var(--text-color);
-        }
-
-        button {
-            background: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--text-color);
-            padding: 1.5rem 3rem;
-            font-family: var(--font-body);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-size: 0.9rem;
-            margin-top: 2rem;
-            align-self: flex-start;
-            position: relative;
-            overflow: hidden;
-            transition: color 0.3s ease;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--text-color);
-            transition: top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: -1;
-        }
-
-        button:hover {
-            color: var(--bg-color);
-        }
-
-        button:hover::before {
-            top: 0;
-        }
-
-        /* Footer */
-        footer {
-            padding: 2rem 5vw;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            opacity: 0.5;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .socials {
-            display: flex;
-            gap: 2rem;
-        }
-
-        /* Utilities */
-        .magnetic {
-            display: inline-block;
-        }
-
-        @media (max-width: 1024px) {
-
-            .about-split,
-            .contact-layout {
-                grid-template-columns: 1fr;
-                flex-direction: column-reverse;
-                gap: 5rem;
-            }
-
-            .service-item:nth-child(even) {
-                margin-left: 0;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-
-            section {
-                padding: 15vh 5vw;
-            }
-
-            .portfolio-item {
-                flex: 0 0 80vw;
-            }
-        }
-
-        /* Preloader */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: var(--bg-color);
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .preloader-brand {
-            font-size: 0.9rem;
-            letter-spacing: 0.5em;
-            text-transform: uppercase;
-            color: var(--text-color);
-            opacity: 0.7;
-        }
-
-        .preloader-count {
-            font-family: var(--font-body);
-            font-size: 3rem;
-            color: var(--text-color);
-            font-weight: 300;
-            letter-spacing: 0.2em;
-        }
-
-        /* Login Overlay */
-        #login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 100000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform: translateY(100%);
-            visibility: hidden;
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 3rem;
-            text-align: center;
-        }
-
-        .login-close {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            font-family: var(--font-body);
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
-        }
-
-        .login-close:hover {
-            opacity: 1;
-        }
-
-        .login-input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-color);
-            font-family: var(--font-body);
-            font-size: 1rem;
-            padding: 1rem 0;
-            margin-bottom: 2rem;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .login-input:focus {
-            border-bottom-color: var(--text-color);
-        }
-
-        .login-btn {
-            background: var(--text-color);
-            color: var(--bg-color);
-            border: none;
-            padding: 1rem 2rem;
-            font-family: var(--font-body);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-size: 0.8rem;
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        #login-status {
-            margin-top: 2rem;
-            font-family: var(--font-body);
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            opacity: 0.6;
-        }
-
-        .dashboard-placeholder {
-            display: none;
-        }
-
-        .active-tab {
-            opacity: 1 !important;
-            border-bottom: 2px solid white;
-            padding-bottom: 5px;
-        }
-
-        /* Employee Comms */
-        .emp-comm-panel {
-            margin-top: 2rem;
-            text-align: left;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 2rem;
-        }
-
-        .emp-message-feed {
-            height: 250px;
-            overflow-y: auto;
-            background: rgba(255, 255, 255, 0.01);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .emp-msg-bubble {
-            max-width: 85%;
-            padding: 0.7rem 0.9rem;
-            font-size: 0.75rem;
-            line-height: 1.4;
-            border-radius: 10px;
-            position: relative;
-            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-        }
-
-        .emp-msg-global {
-            background: #202c33;
-            color: #e9edef;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        .emp-msg-private {
-            background: #202c33;
-            color: #e9edef;
-            border-left: 2px solid var(--accent-color);
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        .emp-msg-sent {
-            background: #005c4b;
-            color: #e9edef;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-
-        .emp-msg-sticker {
-            background: transparent !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-        }
-
-        .emp-msg-sticker img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-        }
-
-        .emp-asset-tray {
-            display: none;
-            background: #202c33;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
-            gap: 8px;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-
-        .emp-tray-item {
-            cursor: pointer;
-            text-align: center;
-            font-size: 1.2rem;
-            transition: transform 0.2s;
-        }
-
-        .emp-tray-item:hover {
-            transform: scale(1.2);
-        }
-    </style>
 </head>
 
 <body>
@@ -857,37 +50,34 @@
     <section class="services" id="services">
         <h2 class="scramble-title">What We Do</h2>
         <div class="services-list">
-            <a href="/web-dev.html" class="service-item reveal-item hoverable"
-                style="text-decoration: none; color: inherit; display: flex;">
+            <a href="web-dev.html" class="service-item reveal-item hoverable" style="display: flex;">
                 <span class="service-num">01</span>
                 <div>
                     <h3 class="service-title magnetic-text">Website Development</h3>
                     <p style="opacity: 0.7; margin-top: 0.5rem;">Immersive digital flagship experiences.</p>
                 </div>
             </a>
-            <a href="/app-dev.html" class="service-item reveal-item hoverable"
-                style="text-decoration: none; color: inherit; display: flex;">
+            <a href="app-dev.html" class="service-item reveal-item hoverable" style="display: flex;">
                 <span class="service-num">02</span>
                 <div>
                     <h3 class="service-title magnetic-text">App Development</h3>
                     <p style="opacity: 0.7; margin-top: 0.5rem;">Scalable architecture for modern mobile users.</p>
                 </div>
             </a>
-            <a href="/marketing.html" class="service-item reveal-item hoverable"
-                style="text-decoration: none; color: inherit; display: flex;">
+            <a href="marketing.html" class="service-item reveal-item hoverable" style="display: flex;">
                 <span class="service-num">03</span>
                 <div>
                     <h3 class="service-title magnetic-text">Digital Marketing</h3>
                     <p style="opacity: 0.7; margin-top: 0.5rem;">Data-driven campaigns that convert.</p>
                 </div>
             </a>
-            <div class="service-item reveal-item">
+            <a href="#contact" class="service-item reveal-item hoverable" style="display: flex;">
                 <span class="service-num">04</span>
                 <div>
                     <h3 class="service-title magnetic-text">UI/UX Design</h3>
                     <p style="opacity: 0.7; margin-top: 0.5rem;">Intuitive interfaces focusing on user psychology.</p>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -897,20 +87,10 @@
         <h2 class="scramble-title">Who We Are</h2>
         <div class="about-split">
             <div class="about-text">
-                <p>Signature Developers was born from a singular conviction — that the digital world deserves more than
-                    the ordinary. Founded in 2025 by Joel Thomas, under the distinguished umbrella of Signature Groups,
-                    we are a premium digital agency engineered for brands that refuse to blend in.</p>
-                <p style="margin-top: 1.5em;">We exist at the intersection of technology
-                    and artistry. Every line of code we write, every
-                    interface we design, every campaign we launch carries the weight of intention — precise, purposeful,
-                    and unmistakably signature.</p>
-                <h4
-                    style="margin-top: 2.5em; text-transform: uppercase; font-size: 0.7em; letter-spacing: 0.1em; opacity: 0.8; font-family: var(--font-display); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: inline-block;">
-                    Our Philosophy</h4>
-                <p style="margin-top: 0.5em;">We believe digital products are not merely tools — they are statements. In
-                    a world flooded with
-                    noise, we build experiences that command silence and demand attention. Our work is defined not by
-                    how much we do, but by how well we do it.</p>
+                <p>Signature Developers was born from a singular conviction — that the digital world deserves more than the ordinary. Founded in 2025 by Joel Thomas, under the distinguished umbrella of Signature Groups, we are a premium digital agency engineered for brands that refuse to blend in.</p>
+                <p style="margin-top: 1.5em;">We exist at the intersection of technology and artistry. Every line of code we write, every interface we design, every campaign we launch carries the weight of intention — precise, purposeful, and unmistakably signature.</p>
+                <h4 style="margin-top: 2.5em; text-transform: uppercase; font-size: 0.7em; letter-spacing: 0.1em; opacity: 0.8; font-family: var(--font-display); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: inline-block;">Our Philosophy</h4>
+                <p style="margin-top: 0.5em;">We believe digital products are not merely tools — they are statements. In a world flooded with noise, we build experiences that command silence and demand attention. Our work is defined not by how much we do, but by how well we do it.</p>
                 <div class="founder-callout"></div>
             </div>
             <div class="about-graphic">
@@ -928,23 +108,11 @@
                 <div class="square-art magnetic"></div>
             </div>
             <div class="founder-text reveal-item">
-                <h3 style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.5rem; font-family: var(--font-display);">
-                    Joel Thomas</h3>
-                <p
-                    style="opacity: 0.5; margin-bottom: 2rem; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.2em; font-family: var(--font-body);">
-                    Visionary. Builder. Creative Technologist.</p>
-                <p
-                    style="font-size: clamp(1.1rem, 1.3vw, 1.4rem); line-height: 1.6; font-family: var(--font-display); font-weight: 400; max-width: 600px; opacity: 0.85;">
-                    Joel founded Signature Developers with one mission: to bring world-class digital craftsmanship to
-                    businesses that think beyond the ordinary. With a deep belief in design-led thinking and technology
-                    as a medium of expression, Joel built Signature Developers to be more than an agency — a creative
-                    institution.</p>
-                <p
-                    style="font-size: clamp(1.2rem, 1.5vw, 1.8rem); line-height: 1.5; font-family: var(--font-display); font-style: italic; margin-top: 2.5rem; border-left: 2px solid var(--accent-color); padding-left: 1.5rem;">
-                    "Signature isn't just our name. It's our standard."<br>
-                    <span
-                        style="font-size: 0.8rem; font-family: var(--font-body); font-style: normal; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.2em; display: inline-block; margin-top: 1rem;">—
-                        Joel Thomas, Founder</span>
+                <h3 style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.5rem; font-family: var(--font-display);">Joel Thomas</h3>
+                <p style="opacity: 0.5; margin-bottom: 2rem; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.2em; font-family: var(--font-body);">Visionary. Builder. Creative Technologist.</p>
+                <p style="font-size: clamp(1.1rem, 1.3vw, 1.4rem); line-height: 1.6; font-family: var(--font-display); font-weight: 400; max-width: 600px; opacity: 0.85;">Joel founded Signature Developers with one mission: to bring world-class digital craftsmanship to businesses that think beyond the ordinary. With a deep belief in design-led thinking and technology as a medium of expression, Joel built Signature Developers to be more than an agency — a creative institution.</p>
+                <p style="font-size: clamp(1.2rem, 1.5vw, 1.8rem); line-height: 1.5; font-family: var(--font-display); font-style: italic; margin-top: 2.5rem; border-left: 2px solid var(--accent-color); padding-left: 1.5rem;">"Signature isn't just our name. It's our standard."<br>
+                    <span style="font-size: 0.8rem; font-family: var(--font-body); font-style: normal; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.2em; display: inline-block; margin-top: 1rem;">— Joel Thomas, Founder</span>
                 </p>
             </div>
         </div>
@@ -981,36 +149,29 @@
         <div class="marquee-wrapper">
             <div class="marquee-content">
                 <div class="testimonial">
-                    <p class="test-quote">"Signature Developers delivered an experience that completely shifted our
-                        brand perception overnight."</p>
+                    <p class="test-quote">"Signature Developers delivered an experience that completely shifted our brand perception overnight."</p>
                     <span class="test-author">Elena Rostova, CEO of AuroraX</span>
                 </div>
                 <div class="testimonial">
-                    <p class="test-quote">"Their attention to micro-interactions and performance is unmatched. True
-                        digital artisans."</p>
+                    <p class="test-quote">"Their attention to micro-interactions and performance is unmatched. True digital artisans."</p>
                     <span class="test-author">Marcus Vance, Product Lead techflow</span>
                 </div>
                 <div class="testimonial">
-                    <p class="test-quote">"It feels less like a corporate site and more like a cinematic journey.
-                        Incredible work."</p>
+                    <p class="test-quote">"It feels less like a corporate site and more like a cinematic journey. Incredible work."</p>
                     <span class="test-author">Sarah Chen, Founder of Vektor</span>
                 </div>
             </div>
-            <!-- Duplicated for seamless loop -->
             <div class="marquee-content">
                 <div class="testimonial">
-                    <p class="test-quote">"Signature Developers delivered an experience that completely shifted our
-                        brand perception overnight."</p>
+                    <p class="test-quote">"Signature Developers delivered an experience that completely shifted our brand perception overnight."</p>
                     <span class="test-author">Elena Rostova, CEO of AuroraX</span>
                 </div>
                 <div class="testimonial">
-                    <p class="test-quote">"Their attention to micro-interactions and performance is unmatched. True
-                        digital artisans."</p>
+                    <p class="test-quote">"Their attention to micro-interactions and performance is unmatched. True digital artisans."</p>
                     <span class="test-author">Marcus Vance, Product Lead techflow</span>
                 </div>
                 <div class="testimonial">
-                    <p class="test-quote">"It feels less like a corporate site and more like a cinematic journey.
-                        Incredible work."</p>
+                    <p class="test-quote">"It feels less like a corporate site and more like a cinematic journey. Incredible work."</p>
                     <span class="test-author">Sarah Chen, Founder of Vektor</span>
                 </div>
             </div>
@@ -1028,9 +189,7 @@
                     <input type="email" id="email" placeholder="Email" required class="hoverable">
                     <textarea id="message" placeholder="Your Enquiry" rows="4" required class="hoverable"></textarea>
                     <button type="submit" class="magnetic hoverable" id="submitBtn">Send Enquiry</button>
-                    <div id="formStatus"
-                        style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.8; font-family: var(--font-body);">
-                    </div>
+                    <div id="formStatus" style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.8; font-family: var(--font-body);"></div>
                 </form>
             </div>
             <div class="contact-details">
@@ -1044,781 +203,63 @@
         <div class="copyright">© 2025 Signature Developers. All rights reserved.</div>
         <div class="socials">
             <a href="https://www.instagram.com/signaturedevelopers?igsh=NGF0emxvd2k3ZjBl" target="_blank" class="hoverable">Instagram</a>
-            <a href="#" target="_blank" class="hoverable">X</a>
-            <a href="https://www.linkedin.com/in/signature-developers-450b45401/" target="_blank" class="hoverable">LinkedIn</a>
-            <a href="javascript:void(0)" class="hoverable" id="team-trigger"
-                style="margin-left: 2rem; opacity: 0.3; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;"
-                onclick="openPortal('employee')">Personnel Gateway</a>
+            <a href="https://linkedin.com/company/signaturedevelopers" target="_blank" class="hoverable">LinkedIn</a>
+            <a href="javascript:void(0)" class="hoverable" id="team-trigger" style="margin-left: 2rem; opacity: 0.3; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;" onclick="openPortal('employee')">Personnel Gateway</a>
         </div>
     </footer>
 
     <div id="login-overlay">
         <div class="login-close hoverable" id="login-close">Close / ESC</div>
         <div class="login-container" id="login-form-container">
-            <h2 id="portal-title"
-                style="font-size: 2.5rem; margin-bottom: 2rem; font-family: var(--font-display); letter-spacing: 0.05em;">
-                PORTAL</h2>
-
-            <!-- Employee Form -->
+            <h2 id="portal-title" style="font-size: 2.5rem; margin-bottom: 2rem; font-family: var(--font-display); letter-spacing: 0.05em;">PORTAL</h2>
             <form id="employeeLoginForm" style="display: none;">
                 <input type="text" id="loginUser" placeholder="IDENTIFIER" required autocomplete="off">
                 <input type="password" id="loginPass" placeholder="SECURITY SEQUENCE" required>
                 <button type="submit" class="login-btn hoverable">ESTABLISH CONNECTION</button>
             </form>
-
-            <!-- Client Hub Auth Form -->
             <div id="customerLoginForm" style="display: none;">
-                <div
-                    style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
-                    <span id="tab-signin" class="hoverable active-tab" onclick="switchAuthMode('signin')"
-                        style="font-size: 0.7rem; letter-spacing: 0.2em; opacity: 1; cursor: pointer;">SIGN IN</span>
-                    <span id="tab-signup" class="hoverable" onclick="switchAuthMode('signup')"
-                        style="font-size: 0.7rem; letter-spacing: 0.2em; opacity: 0.5; cursor: pointer;">SIGN UP</span>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+                    <span id="tab-signin" class="hoverable active-tab" onclick="switchAuthMode('signin')" style="font-size: 0.7rem; letter-spacing: 0.2em; opacity: 1; cursor: pointer;">SIGN IN</span>
+                    <span id="tab-signup" class="hoverable" onclick="switchAuthMode('signup')" style="font-size: 0.7rem; letter-spacing: 0.2em; opacity: 0.5; cursor: pointer;">SIGN UP</span>
                 </div>
-
                 <form id="clientAuthForm">
                     <input type="text" id="clientName" placeholder="FULL NAME" style="display: none;">
                     <input type="text" id="clientIdentifier" placeholder="EMAIL OR PHONE" required autocomplete="off">
                     <input type="password" id="clientPass" placeholder="PASSWORD" required>
-
                     <div id="signin-only-links" style="text-align: right; margin-top: -1rem; margin-bottom: 1.5rem;">
-                        <span class="hoverable" onclick="showForgotPass()"
-                            style="font-size: 0.6rem; opacity: 0.4; cursor: pointer; letter-spacing: 0.1em;">FORGOT
-                            PASSWORD?</span>
+                        <span class="hoverable" onclick="showForgotPass()" style="font-size: 0.6rem; opacity: 0.4; cursor: pointer; letter-spacing: 0.1em;">FORGOT PASSWORD?</span>
                     </div>
-
                     <button type="submit" class="login-btn hoverable" id="authSubmitBtn">ACCESS HUB</button>
-
                     <div class="auth-extras" style="margin-top: 2rem;">
-                        <div style="font-size: 0.6rem; opacity: 0.3; margin-bottom: 1.5rem; letter-spacing: 0.1em;">OR
-                        </div>
-                        <button type="button" class="login-btn hoverable" onclick="simulateGoogleLogin()"
-                            style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;">Continue
-                            with Google</button>
+                        <div style="font-size: 0.6rem; opacity: 0.3; margin-bottom: 1.5rem; letter-spacing: 0.1em;">OR</div>
+                        <button type="button" class="login-btn hoverable" onclick="simulateGoogleLogin()" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;">Continue with Google</button>
                     </div>
                 </form>
             </div>
-
-            <!-- Forgot Password Layer -->
             <form id="forgotPassForm" style="display: none;">
-                <h3 style="font-size: 0.8rem; margin-bottom: 2rem; letter-spacing: 0.2em; opacity: 0.6;">RECOVERY
-                    INITIATION</h3>
-                <input type="text" id="forgotIdentifier" placeholder="REGISTERED EMAIL OR PHONE" required
-                    autocomplete="off">
+                <h3 style="font-size: 0.8rem; margin-bottom: 2rem; letter-spacing: 0.2em; opacity: 0.6;">RECOVERY INITIATION</h3>
+                <input type="text" id="forgotIdentifier" placeholder="REGISTERED EMAIL OR PHONE" required autocomplete="off">
                 <button type="submit" class="login-btn hoverable">SEND RECOVERY PULSE</button>
-                <p class="hoverable" onclick="switchAuthMode('signin')"
-                    style="margin-top: 2rem; font-size: 0.6rem; opacity: 0.4; cursor: pointer;">RETURN TO LOGIN</p>
+                <p class="hoverable" onclick="switchAuthMode('signin')" style="margin-top: 2rem; font-size: 0.6rem; opacity: 0.4; cursor: pointer;">RETURN TO LOGIN</p>
             </form>
-
-            <!-- Reset Password Layer -->
             <form id="resetPassForm" style="display: none;">
-                <h3 style="font-size: 0.8rem; margin-bottom: 2rem; letter-spacing: 0.2em; opacity: 0.6;">CREDENTIAL
-                    RECONFIGURATION</h3>
-                <input type="text" id="resetOtp" placeholder="6-DIGIT RECOVERY CODE" required maxlength="6"
-                    style="text-align: center; letter-spacing: 0.5em;">
+                <h3 style="font-size: 0.8rem; margin-bottom: 2rem; letter-spacing: 0.2em; opacity: 0.6;">CREDENTIAL RECONFIGURATION</h3>
+                <input type="text" id="resetOtp" placeholder="6-DIGIT RECOVERY CODE" required maxlength="6" style="text-align: center; letter-spacing: 0.5em;">
                 <input type="password" id="resetNewPass" placeholder="NEW SECURITY SEQUENCE" required>
                 <button type="submit" class="login-btn hoverable">UPDATE CREDENTIALS</button>
             </form>
-
-            <!-- Verification Layer -->
             <form id="otpVerifyForm" style="display: none;">
-                <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 2rem; letter-spacing: 0.05em;">A verification
-                    sequence has been dispatched to your identifier.</p>
-                <input type="text" id="otpInput" placeholder="ENTER 6-DIGIT SEQUENCE" required maxlength="6"
-                    style="text-align: center; letter-spacing: 0.5em; font-size: 1.5rem;">
+                <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 2rem; letter-spacing: 0.05em;">A verification sequence has been dispatched to your identifier.</p>
+                <input type="text" id="otpInput" placeholder="ENTER 6-DIGIT SEQUENCE" required maxlength="6" style="text-align: center; letter-spacing: 0.5em; font-size: 1.5rem;">
                 <button type="submit" class="login-btn hoverable">VERIFY IDENTITY</button>
             </form>
-
             <p id="login-status" style="margin-top: 2rem; font-size: 0.6rem; letter-spacing: 0.2em; opacity: 0.5;"></p>
         </div>
-
-        <div class="login-container dashboard-placeholder" id="customer-dashboard">
-            <h2 style="font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-display);">Client Hub</h2>
-            <p id="customer-user"
-                style="font-family: var(--font-body); font-size: 0.7rem; opacity: 0.5; margin-bottom: 2rem;"></p>
-            <div
-                style="text-align: left; background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                <p style="font-size: 0.8rem; margin-bottom: 0.5rem; opacity: 0.8;">Status: <span
-                        style="color: #4CAF50;">Authenticated</span></p>
-                <p style="font-size: 0.8rem; opacity: 0.6;">Welcome to the Signature Developers ecosystem. Your project
-                    details will be synchronized shortly.</p>
-            </div>
-            <button class="login-btn hoverable"
-                style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;"
-                onclick="location.reload()">Secure Logout</button>
-        </div>
+        <div class="login-container dashboard-placeholder" id="customer-dashboard"></div>
     </div>
 
-    <script>
-        // Global State
-        let currentUser = null;
-
-        // Init GSAP ScrollTrigger
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Custom Cursor
-        const cursor = document.getElementById('cursor');
-        const hoverables = document.querySelectorAll('a, button, .hoverable, .magnetic-text');
-
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, {
-                x: e.clientX,
-                y: e.clientY,
-                duration: 0.1,
-                ease: "power2.out"
-            });
-        });
-
-        hoverables.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
-        // Magnetic Effect
-        const magnetics = document.querySelectorAll('.magnetic');
-        magnetics.forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const position = el.getBoundingClientRect();
-                const x = e.clientX - position.left - position.width / 2;
-                const y = e.clientY - position.top - position.height / 2;
-
-                gsap.to(el, {
-                    x: x * 0.3,
-                    y: y * 0.3,
-                    duration: 0.5,
-                    ease: "power3.out"
-                });
-            });
-
-            el.addEventListener('mouseleave', () => {
-                gsap.to(el, {
-                    x: 0,
-                    y: 0,
-                    duration: 0.7,
-                    ease: "elastic.out(1, 0.3)"
-                });
-            });
-        });
-
-        // Text Scramble Effect implementation for headings
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$*&%';
-        const scrambleElements = document.querySelectorAll('.scramble-title');
-
-        scrambleElements.forEach(el => {
-            const originalText = el.innerText;
-            el.originalText = originalText;
-
-            ScrollTrigger.create({
-                trigger: el,
-                start: "top 85%",
-                onEnter: () => scrambleText(el)
-            });
-        });
-
-        function scrambleText(element) {
-            let iteration = 0;
-            const text = element.originalText;
-
-            clearInterval(element.scrambleInterval);
-
-            element.scrambleInterval = setInterval(() => {
-                element.innerText = text
-                    .split('')
-                    .map((letter, index) => {
-                        if (index < iteration) return text[index];
-                        if (letter === ' ' || letter === '\n') return letter;
-                        return characters[Math.floor(Math.random() * characters.length)];
-                    })
-                    .join('');
-
-                if (iteration >= text.length) {
-                    clearInterval(element.scrambleInterval);
-                }
-
-                iteration += 1 / 3;
-            }, 30);
-        }
-
-        // Section Reveal Animations
-        gsap.utils.toArray('.reveal-item').forEach((item, i) => {
-            gsap.from(item, {
-                scrollTrigger: {
-                    trigger: item,
-                    start: "top 85%",
-                },
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                ease: "power3.out"
-            });
-        });
-
-        // Preloader & Hero initial animations
-        const tl = gsap.timeline();
-
-        let preloaderCount = { val: 0 };
-        tl.to(preloaderCount, {
-            val: 100,
-            duration: 1.5,
-            ease: "power2.inOut",
-            onUpdate: function () {
-                document.querySelector('.preloader-count').innerText = Math.floor(preloaderCount.val) + "%";
-            }
-        })
-            .to('.preloader-count, .preloader-brand', { opacity: 0, duration: 0.3, stagger: 0.1, ease: "power2.inOut" }, "+=0.2")
-            .to('#preloader', { y: "-100%", duration: 1.2, ease: "power4.inOut" })
-            .from('.reveal-up', {
-                y: 30,
-                opacity: 0,
-                duration: 1.5,
-                stagger: 0.2,
-                ease: "power3.out"
-            }, "-=0.6");
-
-        // Three.js Antigravity Particle Field
-        const canvas = document.getElementById('three-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-        // Create Particles
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 700;
-        const posArray = new Float32Array(particlesCount * 3);
-
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 10;
-        }
-
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-        const material = new THREE.PointsMaterial({
-            size: 0.015,
-            color: 0xE5E4E2,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-
-        const particlesMesh = new THREE.Points(particlesGeometry, material);
-        scene.add(particlesMesh);
-
-        camera.position.z = 3;
-
-        // Mouse interaction for particles
-        let mouseX = 0;
-        let mouseY = 0;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX / window.innerWidth - 0.5;
-            mouseY = event.clientY / window.innerHeight - 0.5;
-        });
-
-        // Animation Loop
-        const clock = new THREE.Clock();
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
-
-            // Antigravity upward drift
-            const positions = particlesGeometry.attributes.position.array;
-            for (let i = 1; i < particlesCount * 3; i += 3) {
-                positions[i] += 0.002;
-                if (positions[i] > 5) {
-                    positions[i] = -5;
-                }
-            }
-            particlesGeometry.attributes.position.needsUpdate = true;
-
-            // Subtle rotation and mouse interaction
-            particlesMesh.rotation.y = elapsedTime * 0.05 + mouseX * 0.5;
-            particlesMesh.rotation.x = mouseY * 0.5;
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        // Responsive Three.js
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // Portal Logic
-        const loginOverlay = document.getElementById('login-overlay');
-        const loginClose = document.getElementById('login-close');
-
-        let authMode = 'signin';
-        function switchAuthMode(mode) {
-            authMode = mode;
-            const nameField = document.getElementById('clientName');
-            const signinLinks = document.getElementById('signin-only-links');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const tabSignin = document.getElementById('tab-signin');
-            const tabSignup = document.getElementById('tab-signup');
-
-            // Reset visibility of other forms
-            document.getElementById('customerLoginForm').style.display = 'block';
-            document.getElementById('forgotPassForm').style.display = 'none';
-            document.getElementById('resetPassForm').style.display = 'none';
-            document.getElementById('otpVerifyForm').style.display = 'none';
-
-            if (mode === 'signup') {
-                nameField.style.display = 'block';
-                nameField.required = true;
-                signinLinks.style.display = 'none';
-                submitBtn.textContent = 'CREATE ACCOUNT';
-                tabSignup.classList.add('active-tab');
-                tabSignin.classList.remove('active-tab');
-            } else {
-                nameField.style.display = 'none';
-                nameField.required = false;
-                signinLinks.style.display = 'block';
-                submitBtn.textContent = 'ACCESS HUB';
-                tabSignin.classList.add('active-tab');
-                tabSignup.classList.remove('active-tab');
-            }
-        }
-
-        function showForgotPass() {
-            gsap.to('#customerLoginForm', {
-                opacity: 0, y: -20, onComplete: () => {
-                    document.getElementById('customerLoginForm').style.display = 'none';
-                    const forgot = document.getElementById('forgotPassForm');
-                    forgot.style.display = 'block';
-                    gsap.fromTo(forgot, { opacity: 0, y: 20 }, { opacity: 1, y: 0 });
-                }
-            });
-        }
-
-        function openPortal(mode) {
-            const overlay = document.getElementById('login-overlay');
-            const title = document.getElementById('portal-title');
-            const empForm = document.getElementById('employeeLoginForm');
-            const clientForms = document.getElementById('customerLoginForm');
-            const forgotForm = document.getElementById('forgotPassForm');
-            const resetForm = document.getElementById('resetPassForm');
-            const verifyForm = document.getElementById('otpVerifyForm');
-            const hubPlaceholder = document.querySelector('.dashboard-placeholder');
-
-            gsap.set(overlay, { visibility: 'visible' });
-            gsap.to(overlay, { y: 0, duration: 1, ease: 'power4.inOut' });
-
-            // Reset visibility
-            empForm.style.display = 'none';
-            clientForms.style.display = 'none';
-            forgotForm.style.display = 'none';
-            resetForm.style.display = 'none';
-            verifyForm.style.display = 'none';
-            hubPlaceholder.style.display = 'none';
-            document.getElementById('login-status').textContent = '';
-
-            if (mode === 'client') {
-                title.textContent = 'CLIENT HUB';
-                clientForms.style.display = 'block';
-                switchAuthMode('signin');
-            } else {
-                title.textContent = 'COMMAND CENTER';
-                empForm.style.display = 'block';
-            }
-        }
-
-        const closePortal = () => {
-            gsap.to(loginOverlay, { autoAlpha: 0, y: "100%", duration: 1, ease: "power4.inOut" });
-        };
-
-        loginClose.addEventListener('click', closePortal);
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && loginOverlay.style.visibility !== "hidden") closePortal();
-        });
-
-        // Expanded Client Auth Logic
-        document.getElementById('clientAuthForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const identifier = document.getElementById('clientIdentifier').value;
-            const password = document.getElementById('clientPass').value;
-            const name = document.getElementById('clientName').value;
-            const status = document.getElementById('login-status');
-
-            status.textContent = 'INITIATING AUTHENTICATION SEQUENCE...';
-
-            try {
-                const endpoint = authMode === 'signup' ? '/api/customer/signup-initiate' : '/api/customer/login';
-                const body = authMode === 'signup'
-                    ? { identifier, password, name }
-                    : { identifier, password };
-
-                const res = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-
-                const data = await res.json();
-                if (res.ok) {
-                    if (data.requiresReverification || authMode === 'signup') {
-                        gsap.to('#customerLoginForm', {
-                            opacity: 0, y: -20, onComplete: () => {
-                                document.getElementById('customerLoginForm').style.display = 'none';
-                                const verify = document.getElementById('otpVerifyForm');
-                                verify.style.display = 'block';
-                                gsap.fromTo(verify, { opacity: 0, y: 20 }, { opacity: 1, y: 0 });
-                            }
-                        });
-                        status.textContent = data.message;
-                    } else {
-                        enterClientHub(data.customer);
-                    }
-                } else {
-                    status.textContent = data.message;
-                }
-            } catch (err) {
-                status.textContent = 'AUTHENTICATION ARRAY FAILURE.';
-            }
-        });
-
-        document.getElementById('otpVerifyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const otp = document.getElementById('otpInput').value;
-            const identifier = document.getElementById('clientIdentifier').value;
-            const status = document.getElementById('login-status');
-
-            status.textContent = 'VALIDATING PULSE...';
-
-            try {
-                const res = await fetch('/api/customer/verify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ identifier, otp })
-                });
-
-                const data = await res.json();
-                if (data.success) {
-                    enterClientHub(data.customer);
-                } else {
-                    status.textContent = data.message;
-                }
-            } catch (err) {
-                status.textContent = 'VERIFICATION ARRAY FAILURE.';
-            }
-        });
-
-        // Forgot Password Logic
-        document.getElementById('forgotPassForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const identifier = document.getElementById('forgotIdentifier').value;
-            const status = document.getElementById('login-status');
-            status.textContent = 'INITIATING RECOVERY PULSE...';
-
-            try {
-                const res = await fetch('/api/customer/forgot-password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ identifier })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    gsap.to('#forgotPassForm', {
-                        opacity: 0, y: -20, onComplete: () => {
-                            document.getElementById('forgotPassForm').style.display = 'none';
-                            const reset = document.getElementById('resetPassForm');
-                            reset.style.display = 'block';
-                            gsap.fromTo(reset, { opacity: 0, y: 20 }, { opacity: 1, y: 0 });
-                        }
-                    });
-                    status.textContent = data.message;
-                } else {
-                    status.textContent = data.message;
-                }
-            } catch (err) {
-                status.textContent = 'RECOVERY ARRAY FAILURE.';
-            }
-        });
-
-        document.getElementById('resetPassForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const identifier = document.getElementById('forgotIdentifier').value;
-            const otp = document.getElementById('resetOtp').value;
-            const newPassword = document.getElementById('resetNewPass').value;
-            const status = document.getElementById('login-status');
-
-            status.textContent = 'RECONFIGURING CREDENTIALS...';
-
-            try {
-                const res = await fetch('/api/customer/reset-password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ identifier, otp, newPassword })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    status.textContent = data.message;
-                    setTimeout(() => switchAuthMode('signin'), 1500);
-                } else {
-                    status.textContent = data.message;
-                }
-            } catch (err) {
-                status.textContent = 'RESET ARRAY FAILURE.';
-            }
-        });
-
-        document.getElementById('contactForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const form = e.target;
-            const btn = form.querySelector('button');
-            const statusEl = document.getElementById('formStatus');
-            const originalText = btn.innerText;
-
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
-
-            btn.innerText = 'Sending...';
-            btn.disabled = true;
-            if (statusEl) {
-                statusEl.textContent = '';
-                statusEl.style.color = '';
-            }
-
-            try {
-                const res = await fetch('/api/booking', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        service: 'Website Enquiry',
-                        name,
-                        company: 'N/A',
-                        vision: message,
-                        identifier: email
-                    })
-                });
-
-                const data = await res.json();
-
-                if (!res.ok || !data.success) {
-                    throw new Error(data.error || 'Enquiry send failed.');
-                }
-
-                btn.innerText = 'Enquiry Sent';
-                if (statusEl) {
-                    statusEl.textContent = 'Enquiry sent successfully. We will be in touch shortly.';
-                    statusEl.style.color = '#aaffaa';
-                }
-                form.reset();
-            } catch (err) {
-                btn.innerText = 'Retry';
-                if (statusEl) {
-                    statusEl.textContent = 'Enquiry transmission failed. Please try again or email us directly.';
-                    statusEl.style.color = '#ff8888';
-                }
-                console.error('Contact enquiry error:', err);
-            } finally {
-                btn.disabled = false;
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                }, 4000);
-            }
-        });
-
-        function simulateGoogleLogin() {
-            const status = document.getElementById('login-status');
-            status.innerText = "CONNECTING TO GOOGLE...";
-            setTimeout(() => {
-                enterClientHub({ name: "Google User", identifier: "user@gmail.com" });
-            }, 1000);
-        }
-
-        async function enterClientHub(customer) {
-            currentUser = customer.identifier;
-            const status = document.getElementById('login-status');
-            status.textContent = 'ACCESS GRANTED. INITIALIZING HUB...';
-
-            // Fetch Initiatives
-            let bookings = [];
-            try {
-                const res = await fetch(`/api/customer/bookings?identifier=${encodeURIComponent(currentUser)}`);
-                bookings = await res.json();
-            } catch (err) {
-                console.error("Hub data sync failure.");
-            }
-
-            gsap.to('#login-form-container', {
-                opacity: 0, y: -20, onComplete: () => {
-                    document.getElementById('customerLoginForm').style.display = 'none';
-                    document.getElementById('otpVerifyForm').style.display = 'none';
-                    document.getElementById('employeeLoginForm').style.display = 'none';
-                    document.getElementById('forgotPassForm').style.display = 'none';
-                    document.getElementById('resetPassForm').style.display = 'none';
-
-                    const placeholder = document.querySelector('.dashboard-placeholder');
-
-                    const bookingCards = bookings.length > 0 ? bookings.map(b => `
-                    <div style="border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; background: rgba(255,255,255,0.02); margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <div style="font-size: 0.8rem; letter-spacing: 2px;">${b.service.toUpperCase()}</div>
-                            <div style="font-size: 0.6rem; color: #E5E4E2; opacity: 0.6;">ID: ${b.id}</div>
-                        </div>
-                        <div style="height: 2px; width: 100%; background: rgba(255,255,255,0.1); margin-bottom: 1rem; position: relative;">
-                            <div style="height: 100%; width: ${b.progress}%; background: #E5E4E2; box-shadow: 0 0 10px #E5E4E2;"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.6rem; opacity: 0.5;">
-                            <span>STATUS: ${b.status.toUpperCase()}</span>
-                            <span>PROGRESS: ${b.progress}%</span>
-                        </div>
-                    </div>
-                `).join('') : '<div style="opacity: 0.4; font-size: 0.8rem;">NO ACTIVE INITIATIVES DETECTED.</div>';
-
-                    placeholder.innerHTML = `
-                    <div style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 2rem; letter-spacing: 4px;">SYSTEM ACCESS: ${customer.name.toUpperCase()}</div>
-                    
-                    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem; text-align: left;">
-                        <div>
-                            <div style="font-size: 0.6rem; letter-spacing: 3px; opacity: 0.4; margin-bottom: 2rem;">ONGOING INITIATIVES</div>
-                            ${bookingCards}
-                        </div>
-                        <div>
-                            <div style="font-size: 0.6rem; letter-spacing: 3px; opacity: 0.4; margin-bottom: 2rem;">SECURITY ARRAY</div>
-                            <div style="border: 1px solid rgba(255,255,255,0.1); padding: 1.5rem; margin-bottom: 1rem;">
-                                <div style="font-size: 0.6rem; opacity: 0.4; margin-bottom: 0.5rem;">CONNECTION</div>
-                                <div style="font-size: 0.9rem; color: #00FF00;">ENCRYPTED / STABLE</div>
-                            </div>
-                            <div style="border: 1px solid rgba(255,255,255,0.1); padding: 1.5rem;">
-                                <div style="font-size: 0.6rem; opacity: 0.4; margin-bottom: 0.5rem;">NEXT AUDIT</div>
-                                <div style="font-size: 0.9rem;">60 DAYS REMAINING</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                    placeholder.style.display = 'block';
-                    gsap.fromTo(placeholder, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power4.out' });
-                }
-            });
-        }
-
-        // Updated Login Logic
-        document.getElementById('employeeLoginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = document.getElementById('loginUser').value;
-            const pass = document.getElementById('loginPass').value;
-            const status = document.getElementById('login-status');
-            status.innerText = "AUTHENTICATING...";
-
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user, pass })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    if (data.role === 'ceo') {
-                        // CEO Dashboard needs session data too
-                        sessionStorage.setItem('employeeUser', user);
-                        window.location.href = '/c-dashboard.html';
-                        return;
-                    }
-
-                    // Route default employees to the Work Hub Tracker
-                    sessionStorage.setItem('employeeUser', user);
-                    status.innerText = "ACCESS GRANTED. INITIALIZING WORK HUB...";
-                    setTimeout(() => {
-                        window.location.href = '/e-dashboard.html';
-                    }, 500);
-                } else {
-                    status.innerText = "INVALID SEQUENCE";
-                    gsap.fromTo('#employeeLoginForm', { x: -5 }, { x: 5, repeat: 5, yoyo: true, duration: 0.05 });
-                }
-            } catch (err) {
-                status.innerText = "SYSTEM FAILURE";
-            }
-        });
-
-        // Employee Messaging Logic
-        async function empFetchMessages() {
-            if (!currentUser) return;
-            try {
-                const res = await fetch(`/api/messages?user=${currentUser}&role=employee`);
-                const messages = await res.json();
-                const feed = document.getElementById('emp-feed');
-                feed.innerHTML = messages.map(m => {
-                    let type = m.isPublic ? 'emp-msg-global' : (m.from === currentUser ? 'emp-msg-sent' : 'emp-msg-private');
-                    let label = m.isPublic ? 'GLOBAL' : (m.from === currentUser ? 'SENT' : 'PRIVATE / FROM CEO');
-
-                    const isSticker = m.content.startsWith('STICKER:');
-                    const content = isSticker
-                        ? `<img src="${m.content.replace('STICKER:', '')}" alt="sticker">`
-                        : m.content;
-
-                    return `
-                        <div class="emp-msg-bubble ${type} ${isSticker ? 'emp-msg-sticker' : ''}">
-                            <div style="font-size: 0.5rem; opacity: 0.5; margin-bottom: 0.2rem;">${label}</div>
-                            ${content}
-                        </div>
-                    `;
-                }).join('');
-                feed.scrollTop = feed.scrollHeight;
-            } catch (err) {
-                console.error("Comms sync failed.");
-            }
-        }
-
-        const STICKERS = [
-            'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3RqMTUzdGZ2ZjVqemx3NXp4NXp4NXp4NXp4NXp4NXp4NXp4NXp4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKVUn7iM8FMEU24/giphy.gif',
-            'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3RqMTUzdGZ2ZjVqemx3NXp4NXp4NXp4NXp4NXp4NXp4NXp4NXp4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKUR9H6xMvXj6AU/giphy.gif',
-            'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3RqMTUzdGZ2ZjVqemx3NXp4NXp4NXp4NXp4NXp4NXp4NXp4NXp4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKVmS2mNpO5H6uY/giphy.gif'
-        ];
-        const EMOJIS = ['🚀', '📈', '✅', '⚠️', '🔥', '💎', '🤝', '⚡', '💻', '📱'];
-
-        function toggleEmpTray() {
-            const tray = document.getElementById('emp-asset-tray');
-            tray.style.display = tray.style.display === 'grid' ? 'none' : 'grid';
-            if (tray.style.display === 'grid') {
-                const stickerHtml = STICKERS.map(s => `<div class="emp-tray-item" onclick="sendEmpAsset('${s}', true)"><img src="${s}" style="width: 30px; height: 30px; object-fit: contain;"></div>`).join('');
-                const emojiHtml = EMOJIS.map(e => `<div class="emp-tray-item" onclick="sendEmpAsset('${e}', false)">${e}</div>`).join('');
-                tray.innerHTML = emojiHtml + stickerHtml;
-            }
-        }
-
-        function sendEmpAsset(val, isSticker) {
-            if (isSticker) {
-                document.getElementById('emp-msg-input').value = `STICKER:${val}`;
-                empSendMessage();
-            } else {
-                document.getElementById('emp-msg-input').value += val;
-            }
-        }
-
-        async function empSendMessage() {
-            const input = document.getElementById('emp-msg-input');
-            if (!input.value) return;
-
-            try {
-                const res = await fetch('/api/messages', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        from: currentUser,
-                        to: 'ajo',
-                        content: input.value,
-                        isPublic: false
-                    })
-                });
-                if (res.ok) {
-                    input.value = '';
-                    empFetchMessages();
-                }
-            } catch (err) {
-                console.error("Transmission failure.");
-            }
-        }
-    </script>
+    <!-- Core Script -->
+    <script src="script.js" defer></script>
 </body>
 
 </html>
