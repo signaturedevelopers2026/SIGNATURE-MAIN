@@ -9,7 +9,7 @@ const multer = require('multer');
 // Multer Config
 const employeePhotoStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = path.join(__dirname, '..', 'uploads', 'employees');
+        const dir = path.join(__dirname, 'uploads', 'employees');
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         cb(null, dir);
     },
@@ -27,11 +27,11 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-// File Paths (pointing up to project root)
-const EMPLOYEES_FILE = path.join(__dirname, '..', 'employees.json');
-const MESSAGES_FILE = path.join(__dirname, '..', 'messages.json');
-const CUSTOMERS_FILE = path.join(__dirname, '..', 'customers.json');
-const BOOKINGS_FILE = path.join(__dirname, '..', 'bookings.json');
+// File Paths
+const EMPLOYEES_FILE = path.join(__dirname, 'employees.json');
+const MESSAGES_FILE = path.join(__dirname, 'messages.json');
+const CUSTOMERS_FILE = path.join(__dirname, 'customers.json');
+const BOOKINGS_FILE = path.join(__dirname, 'bookings.json');
 
 // Helper functions for data persistence
 const getEmployees = () => {
@@ -89,11 +89,14 @@ const sendEmail = async (options) => {
 const pendingOtps = {};
 const pendingSignUps = {}; 
 
+// Serve static frontend files
+app.use(express.static(path.join(__dirname)));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // API Routes
 app.post('/api/contact', async (req, res) => {
     const { name, email, message } = req.body;
     if (!name || !email || !message) return res.status(400).json({ error: 'Missing fields' });
-    
     const mailOptions = {
         from: `"Signature Developers" <${process.env.EMAIL_USER}>`,
         replyTo: `"${name}" <${email}>`,
@@ -101,7 +104,6 @@ app.post('/api/contact', async (req, res) => {
         subject: `[ENQUIRY] New message from ${name}`,
         text: `NEW ENQUIRY FROM ${name}\n\nEmail: ${email}\n\nMessage:\n${message}`
     };
-
     const result = await sendEmail(mailOptions);
     if (result.success) res.status(200).json({ success: true, message: 'Message sent!' });
     else res.status(500).json({ success: false, error: 'Email failed' });
@@ -236,6 +238,13 @@ app.post('/api/booking', async (req, res) => {
     await sendEmail({ from: `"SIGNATURE" <${process.env.EMAIL_USER}>`, to: process.env.CONTACT_EMAIL || 'signaturedevelopersofficial@gmail.com', subject: "NEW BOOKING", text: `Client: ${name}\nService: ${service}\nVision: ${vision}` });
     res.status(200).json({ success: true, bookingId: newBooking.id });
 });
+
+// Direct Page Routes
+app.get('/web-dev.html', (req, res) => res.sendFile('web-dev.html', { root: __dirname }));
+app.get('/app-dev.html', (req, res) => res.sendFile('app-dev.html', { root: __dirname }));
+app.get('/marketing.html', (req, res) => res.sendFile('marketing.html', { root: __dirname }));
+app.get('/c-dashboard.html', (req, res) => res.sendFile('c-dashboard.html', { root: __dirname }));
+app.get('/', (req, res) => res.sendFile('index.html', { root: __dirname }));
 
 // Start Server locally
 if (process.env.NODE_ENV !== 'production') {
