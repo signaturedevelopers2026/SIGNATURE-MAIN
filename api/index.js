@@ -89,10 +89,6 @@ const sendEmail = async (options) => {
 const pendingOtps = {};
 const pendingSignUps = {}; 
 
-// Serve static frontend files
-app.use(express.static(path.join(__dirname, '..')));
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-
 // API Routes
 app.post('/api/contact', async (req, res) => {
     const { name, email, message } = req.body;
@@ -240,13 +236,6 @@ app.post('/api/booking', async (req, res) => {
     await sendEmail({ from: `"SIGNATURE" <${process.env.EMAIL_USER}>`, to: process.env.CONTACT_EMAIL || 'signaturedevelopersofficial@gmail.com', subject: "NEW BOOKING", text: `Client: ${name}\nService: ${service}\nVision: ${vision}` });
     res.status(200).json({ success: true, bookingId: newBooking.id });
 });
-
-// Page routes (serving from root)
-app.get('/web-dev.html', (req, res) => res.sendFile('web-dev.html', { root: path.join(__dirname, '..') }));
-app.get('/app-dev.html', (req, res) => res.sendFile('app-dev.html', { root: path.join(__dirname, '..') }));
-app.get('/marketing.html', (req, res) => res.sendFile('marketing.html', { root: path.join(__dirname, '..') }));
-app.get('/c-dashboard.html', (req, res) => res.sendFile('c-dashboard.html', { root: path.join(__dirname, '..') }));
-app.get('/', (req, res) => res.sendFile('index.html', { root: path.join(__dirname, '..') }));
 
 // Start Server locally
 if (process.env.NODE_ENV !== 'production') {
