@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node server.js",
+    "start": "node api/index.js",
     "build": "echo 'No build step required'"
   },
   "dependencies": {
