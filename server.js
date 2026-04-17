@@ -598,6 +598,9 @@ app.get('/', (req, res) => {
 // });
 
 // Start Server
+if (process.env.NODE_ENV !== 'production') {
 app.listen(PORT, () => {
     console.log(`Signature Developers Backend running on http://localhost:${PORT}`);
 });
+}
+module.exports = app;
