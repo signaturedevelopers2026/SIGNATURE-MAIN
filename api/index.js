@@ -27,7 +27,10 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-const EMPLOYEES_FILE = path.join(__dirname, 'employees.json');
+const EMPLOYEES_FILE = path.join(__dirname, '..', 'employees.json');
+const MESSAGES_FILE = path.join(__dirname, '..', 'messages.json');
+const CUSTOMERS_FILE = path.join(__dirname, '..', 'customers.json');
+const BOOKINGS_FILE = path.join(__dirname, '..', 'bookings.json');
 
 // Helper to read employees
 const getEmployees = () => {
@@ -112,9 +115,9 @@ const pendingOtps = {};
 const pendingSignUps = {}; // { identifier: { name, password, expires } } 
 
 // Serve static frontend files (the index.html)
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '..')));
 // Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Contact Form Endpoint
 app.post('/api/contact', async (req, res) => {
@@ -572,24 +575,24 @@ ${isEnquiry
 
 // Explicit routes for detail pages
 app.get('/web-dev.html', (req, res) => {
-    res.sendFile('web-dev.html', { root: __dirname });
+    res.sendFile('web-dev.html', { root: path.join(__dirname, '..') });
 });
 
 app.get('/app-dev.html', (req, res) => {
-    res.sendFile('app-dev.html', { root: __dirname });
+    res.sendFile('app-dev.html', { root: path.join(__dirname, '..') });
 });
 
 app.get('/marketing.html', (req, res) => {
-    res.sendFile('marketing.html', { root: __dirname });
+    res.sendFile('marketing.html', { root: path.join(__dirname, '..') });
 });
 
 app.get('/c-dashboard.html', (req, res) => {
-    res.sendFile('c-dashboard.html', { root: __dirname });
+    res.sendFile('c-dashboard.html', { root: path.join(__dirname, '..') });
 });
 
 // Fallback to serving the single-page application
 app.get('/', (req, res) => {
-    res.sendFile('index.html', { root: __dirname });
+    res.sendFile('index.html', { root: path.join(__dirname, '..') });
 });
 
 // Wildcard fallback removed to fix Express 5 path-to-regexp anomaly
